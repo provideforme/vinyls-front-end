@@ -25,6 +25,22 @@ const App = () => {
   const [dbRecords, setDbRecords] = useState([])
 
   useEffect(() => {
+    // Initialize Intercom when the component mounts
+    window.Intercom('boot', {
+      api_base: 'https://api.intercom.io',
+        app_id: 'z7yu1nor',
+        name: user.name,
+        email: user.email,
+        created_at: user.createdAt
+    });
+
+    // Ensure that you clean up Intercom when the component unmounts
+    return () => {
+        window.Intercom('shutdown');
+    };
+}, [user.email, user.createdAt, user.name]);
+
+  useEffect(() => {
     if (user) {
       profileService.getProfile(user.profile)
       .then(profileData => {
